@@ -1,18 +1,12 @@
 spring:
-  # H2 Setting Info (H2 Console을 사용하기 위한 설정)
+  # H2 Setting Info (H2 Console? ???? ?? ???? ??)
   h2:
     console:
-      enabled: true  # H2 Console을 사용할지 여부 (H2 Console을 사용하려면 true로 설정)
-      path: /h2-console  # H2 Console의 경로 설정
-
-  # Database Setting Info (데이터베이스 설정)
+      enabled: true  # H2 Console? ???? ?? (H2 Console? H2 Database? UI? ????? ??)
+      path: /h2-console  # H2 Console? Path
+  # Database Setting Info (Database? H2? ???? ?? H2?? ?? ??)
   datasource:
-    driver-class-name: org.h2.Driver  # 데이터베이스 드라이버 클래스 (H2의 경우 org.h2.Driver)
-    url: jdbc:h2:~/airviennatest  # H2 데이터베이스 URL (여기서 ~는 홈 디렉토리를 나타냄)
-    username: sa  # H2 데이터베이스 접속에 사용할 username (기본값은 sa)
-    password:  # H2 데이터베이스 접속에 사용할 password (비밀번호가 필요한 경우 입력)
-
-  # DDL auto create 설정 (애플리케이션 실행 시 자동으로 테이블 생성)
-  jpa:
-    hibernate:
-      ddl-auto: update  # update로 설정하면 테이블이 없으면 생성, 이미 있는 경우는 업데이트
+    driver-class-name: org.h2.Driver  # Database? H2? ?????.
+    url: jdbc:h2:~/test  # H2 ?? ??
+    username: sa  # H2 ?? ? ??? username ?? (??? ??? ??)
+    password:  # H2 ?? ? ??? password ?? (??? ??? ??)
