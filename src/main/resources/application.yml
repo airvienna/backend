@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: prod
   # H2 Setting Info (H2 Console을 사용하기 위한 설정)
   h2:
     console:
@@ -6,11 +8,11 @@ spring:
       path: /h2-console  # H2 Console의 경로 설정
 
   # Database Setting Info (데이터베이스 설정)
-  datasource:
-    driver-class-name: org.h2.Driver  # 데이터베이스 드라이버 클래스 (H2의 경우 org.h2.Driver)
-    url: jdbc:h2:~/airviennatest  # H2 데이터베이스 URL (여기서 ~는 홈 디렉토리를 나타냄)
-    username: sa  # H2 데이터베이스 접속에 사용할 username (기본값은 sa)
-    password:  # H2 데이터베이스 접속에 사용할 password (비밀번호가 필요한 경우 입력)
+#  datasource:
+#    driver-class-name: org.h2.Driver  # 데이터베이스 드라이버 클래스 (H2의 경우 org.h2.Driver)
+#    url: jdbc:h2:~/airviennatest  # H2 데이터베이스 URL (여기서 ~는 홈 디렉토리를 나타냄)
+#    username: sa  # H2 데이터베이스 접속에 사용할 username (기본값은 sa)
+#    password:  # H2 데이터베이스 접속에 사용할 password (비밀번호가 필요한 경우 입력)
 
   # DDL auto create 설정 (애플리케이션 실행 시 자동으로 테이블 생성)
   jpa:
