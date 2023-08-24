@@ -3,6 +3,12 @@ server:
 spring:
   profiles:
     active: default
+
+  # Redis Setting
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDiS_PORT}
+
   # H2 Setting Info (H2 Console을 사용하기 위한 설정)
   h2:
     console:
@@ -10,22 +16,35 @@ spring:
       path: /h2-console  # H2 Console의 경로 설정
 
   # Database Setting Info (데이터베이스 설정)
-#  datasource:
-#    driver-class-name: org.h2.Driver  # 데이터베이스 드라이버 클래스 (H2의 경우 org.h2.Driver)
-#    url: jdbc:h2:~/airviennatest  # H2 데이터베이스 URL (여기서 ~는 홈 디렉토리를 나타냄)
-#    username: sa  # H2 데이터베이스 접속에 사용할 username (기본값은 sa)
-#    password:  # H2 데이터베이스 접속에 사용할 password (비밀번호가 필요한 경우 입력)
-
   datasource:
     driver-class-name: ${DB_DRIVER_CLASSNAME}
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
-  # DDL auto create 설정 (애플리케이션 실행 시 자동으로 테이블 생성)
   jpa:
     hibernate:
       ddl-auto: update  # update로 설정하면 테이블이 없으면 생성, 이미 있는 경우는 업데이트
     properties:
       hibernate:
         dialect: ${HIBERNATE_DIALECT}
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_ADDRESS}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-token:
+    expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME}
+  refresh-token:
+    expiration-time: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}

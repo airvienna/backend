@@ -13,7 +13,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 모든 요청 경로(/**)에 대한 CORS 설정을 지정
         registry.addMapping("/**")
                 // 허용할 원본 도메인 지정
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins("http://localhost:5173")
                 // 허용할 HTTP 메서드 지정
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 // 요청 헤더 중 어떤 것들을 허용할 것인지 지정
