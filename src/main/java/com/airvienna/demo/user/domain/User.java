@@ -43,20 +43,24 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotNull(message = "Phone number cannot be null.")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+,-./:;<=>?@\\[\\]^_`{|}~]).{8,}$",
+            message = "Password must be at least 8 characters long and combine letters, numbers, and special symbols.")
+    private String password;
+
     @Pattern(regexp = "^[+]?[0-9]{1,15}$", message = "Phone number format is invalid. Please enter a valid phone number.")
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String phone;
 
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
     @Builder
-    public User(String lastName, String firstName, LocalDate birth, String email, String phone, String profileImageUrl) {
+    public User(String lastName, String firstName, LocalDate birth, String email, String password, String phone, String profileImageUrl) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.birth = birth;
         this.email = email;
+        this.password = password;
         this.phone = phone;
         this.profileImageUrl = profileImageUrl;
     }

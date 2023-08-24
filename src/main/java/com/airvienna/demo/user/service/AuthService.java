@@ -1,23 +1,17 @@
 package com.airvienna.demo.user.service;
 
-import com.airvienna.demo.user.Mapper.UserMapper;
-import com.airvienna.demo.user.domain.User;
+import com.airvienna.demo.security.jwt.dto.TokenDto;
+import com.airvienna.demo.user.dto.RequestLoginDto;
+import com.airvienna.demo.user.dto.RequestRegenerateToken;
 import com.airvienna.demo.user.dto.RequestUserDto;
-import com.airvienna.demo.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class AuthService {
+public interface AuthService {
+    // 회원가입
+    Long signUp(RequestUserDto requestUserDto);
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+    // 로그인
+    TokenDto login(RequestLoginDto requestLoginDto);
 
-    @Transactional
-    public Long signUp(RequestUserDto request) {
-        User user = userMapper.requestToEntity(request);
-        return userRepository.save(user).getId();
-    }
+    // 토큰 재발급
+    TokenDto regenerateToken(RequestRegenerateToken requestRegenerateToken);
 }
