@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   profiles:
-    active: prod
+    active: default
   # H2 Setting Info (H2 Console을 사용하기 위한 설정)
   h2:
     console:
@@ -16,7 +16,16 @@ spring:
 #    username: sa  # H2 데이터베이스 접속에 사용할 username (기본값은 sa)
 #    password:  # H2 데이터베이스 접속에 사용할 password (비밀번호가 필요한 경우 입력)
 
+  datasource:
+    driver-class-name: ${DB_DRIVER_CLASSNAME}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
   # DDL auto create 설정 (애플리케이션 실행 시 자동으로 테이블 생성)
   jpa:
     hibernate:
       ddl-auto: update  # update로 설정하면 테이블이 없으면 생성, 이미 있는 경우는 업데이트
+    properties:
+      hibernate:
+        dialect: ${HIBERNATE_DIALECT}
