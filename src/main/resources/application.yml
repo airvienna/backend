@@ -7,7 +7,7 @@ spring:
   # Redis Setting
   redis:
     host: ${REDIS_HOST}
-    port: ${REDiS_PORT}
+    port: ${REDIS_PORT}
 
   # H2 Setting Info (H2 Console을 사용하기 위한 설정)
   h2:
