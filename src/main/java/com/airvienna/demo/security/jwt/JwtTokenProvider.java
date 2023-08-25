@@ -2,6 +2,8 @@ package com.airvienna.demo.security.jwt;
 
 import com.airvienna.demo.security.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -77,8 +80,11 @@ public class JwtTokenProvider {
      * 토큰으로부터 클레임을 만들고, 이를 통해 User 객체 생성해 Authentication 객체 반환
      */
     public Authentication getAuthentication(String token) {
-        String userPrincipal = Jwts.parser().
-                setSigningKey(secretKey)
+        SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+
+        String userPrincipal = Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
                 .parseClaimsJws(token)
                 .getBody().getSubject();
         UserDetails userDetails = userDetailsService.loadUserByUsername(userPrincipal);
@@ -102,7 +108,8 @@ public class JwtTokenProvider {
      */
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+            Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
             log.error("JWT 토큰이 만료되었습니다.");
