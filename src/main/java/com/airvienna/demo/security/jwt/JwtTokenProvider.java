@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class JwtTokenProvider {
 
     private final RedisTemplate<String, String> redisTemplate;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Value("${jwt.secret-key}")
     private String secretKey;
@@ -31,8 +32,6 @@ public class JwtTokenProvider {
     private long accessExpirationTime;
     @Value("${jwt.refresh-token.expiration-time}")
     private long refreshExpirationTime;
-
-    private final UserDetailsServiceImpl userDetailsService;
 
     /**
      * Access 토큰 생성
@@ -57,12 +56,13 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(authentication.getName());
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + refreshExpirationTime);
+        SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
 
         String refreshToken = Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secret, SignatureAlgorithm.HS256)
                 .compact();
 
         // redis에 저장
