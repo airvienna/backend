@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z]))(?=(?:\\D*\\d))(?=(?:[^\\W_]*[\\W_])).{8,}$",
+    @Pattern(regexp = "^(?:(?=.*[a-zA-Z])(?=.*[\\W_])|(?=.*[a-zA-Z])(?=.*\\d)|(?=.*\\d)(?=.*[\\W_])).{8,}$",
             message = "Password must be at least 8 characters long and combine at least two of the following: letters, numbers, and special symbols.")
     private String password;
 

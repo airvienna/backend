@@ -30,7 +30,7 @@ public class RequestUserDto {
     @Pattern(regexp = "^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$", message = "Invalid email format. Please provide a valid email.")
     private String email;
 
-    @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z]))(?=(?:\\D*\\d))(?=(?:[^\\W_]*[\\W_])).{8,}$",
+    @Pattern(regexp = "^(?:(?=.*[a-zA-Z])(?=.*[\\W_])|(?=.*[a-zA-Z])(?=.*\\d)|(?=.*\\d)(?=.*[\\W_])).{8,}$",
             message = "Password must be at least 8 characters long and combine at least two of the following: letters, numbers, and special symbols.")
     private String password;
 
