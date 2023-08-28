@@ -15,7 +15,7 @@ public class RequestLoginDto {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*()_+,-./:;<=>?@\\[\\]^_`{|}~]).{8,}$",
-            message = "Password must be at least 8 characters long and combine letters, numbers, and special symbols.")
+    @Pattern(regexp = "^(?=(?:[^a-zA-Z]*[a-zA-Z]))(?=(?:\\D*\\d))(?=(?:[^\\W_]*[\\W_])).{8,}$",
+            message = "Password must be at least 8 characters long and combine at least two of the following: letters, numbers, and special symbols.")
     private String password;
 }
