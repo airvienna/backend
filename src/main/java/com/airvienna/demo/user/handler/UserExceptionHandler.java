@@ -1,9 +1,9 @@
-package com.airvienna.demo.handler;
+package com.airvienna.demo.user.handler;
 
-import com.airvienna.demo.exception.DuplicateEmailException;
-import com.airvienna.demo.exception.DuplicatePhoneException;
-import com.airvienna.demo.exception.InvalidCredentialsException;
-import com.airvienna.demo.exception.InvalidRefreshTokenException;
+import com.airvienna.demo.user.exception.DuplicateEmailException;
+import com.airvienna.demo.user.exception.DuplicatePhoneException;
+import com.airvienna.demo.user.exception.InvalidCredentialsException;
+import com.airvienna.demo.user.exception.InvalidRefreshTokenException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,12 +1,12 @@
-package com.airvienna.demo.exception;
+package com.airvienna.demo.user.exception;
 
 import org.springframework.http.HttpStatus;
 
-// refresh token이 유효하지 않음
-public class InvalidRefreshTokenException extends RuntimeException {
+// 비밀번호가 일치하지 않음
+public class InvalidCredentialsException extends RuntimeException {
     private final HttpStatus httpStatus;
 
-    public InvalidRefreshTokenException(String message) {
+    public InvalidCredentialsException(String message) {
         super(message);
         this.httpStatus = HttpStatus.UNAUTHORIZED;
     }

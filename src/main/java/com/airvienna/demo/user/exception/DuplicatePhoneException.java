@@ -1,4 +1,4 @@
-package com.airvienna.demo.exception;
+package com.airvienna.demo.user.exception;
 
 import org.springframework.http.HttpStatus;
 

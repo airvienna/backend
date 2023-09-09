@@ -1,9 +1,9 @@
 package com.airvienna.demo.user.service;
 
-import com.airvienna.demo.exception.DuplicateEmailException;
-import com.airvienna.demo.exception.DuplicatePhoneException;
-import com.airvienna.demo.exception.InvalidCredentialsException;
-import com.airvienna.demo.exception.InvalidRefreshTokenException;
+import com.airvienna.demo.user.exception.DuplicateEmailException;
+import com.airvienna.demo.user.exception.DuplicatePhoneException;
+import com.airvienna.demo.user.exception.InvalidCredentialsException;
+import com.airvienna.demo.user.exception.InvalidRefreshTokenException;
 import com.airvienna.demo.security.jwt.JwtTokenProvider;
 import com.airvienna.demo.user.Mapper.UserMapper;
 import com.airvienna.demo.user.domain.User;
