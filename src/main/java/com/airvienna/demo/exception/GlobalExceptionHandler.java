@@ -15,4 +15,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInCorrectPasswordException(InvalidCredentialsException ex) {
         return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
     }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<String> handleDuplicateEmailException(DuplicateEmailException ex) {
+        return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
+    }
+
+    @ExceptionHandler(DuplicatePhoneException.class)
+    public ResponseEntity<String> handleDuplicatePhoneException(DuplicatePhoneException ex) {
+        return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
+    }
 }

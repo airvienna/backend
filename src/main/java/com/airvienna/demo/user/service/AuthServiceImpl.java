@@ -1,5 +1,7 @@
 package com.airvienna.demo.user.service;
 
+import com.airvienna.demo.exception.DuplicateEmailException;
+import com.airvienna.demo.exception.DuplicatePhoneException;
 import com.airvienna.demo.exception.InvalidCredentialsException;
 import com.airvienna.demo.exception.InvalidRefreshTokenException;
 import com.airvienna.demo.security.jwt.JwtTokenProvider;
@@ -37,6 +39,16 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto signUp(RequestUserDto requestUserDto) {
         // 유저의 정보 저장
         User user = userMapper.requestToEntity(requestUserDto);
+
+        // 이미 가입한 Email이면 409 CONFLCT
+        if(userRepository.existsByEmail(requestUserDto.getEmail())) {
+            throw new DuplicateEmailException("An account with this email already exists.");
+        }
+        // 이미 가입한 전화번호이면 409 CONFLCT
+        else if (requestUserDto.getPhone() != null || userRepository.existsByPhone(requestUserDto.getPhone())) {
+            throw new DuplicatePhoneException("An account with this phone number already exists.");
+        }
+
         userRepository.save(user).getId();
 
         // JWT 토큰 반환
