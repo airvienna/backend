@@ -50,3 +50,7 @@ jwt:
     expiration-time: ${JWT_ACCESS_TOKEN_EXPIRATION_TIME}
   refresh-token:
     expiration-time: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
+
+logging:
+  level:
+    com.airvienna.demo: DEBUG
