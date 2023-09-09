@@ -45,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
             throw new DuplicateEmailException("An account with this email already exists.");
         }
         // 이미 가입한 전화번호이면 409 CONFLCT
-        else if (requestUserDto.getPhone() != null || userRepository.existsByPhone(requestUserDto.getPhone())) {
+        else if (requestUserDto.getPhone() != null && userRepository.existsByPhone(requestUserDto.getPhone())) {
             throw new DuplicatePhoneException("An account with this phone number already exists.");
         }
 
