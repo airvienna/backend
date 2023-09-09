@@ -12,6 +12,9 @@ public interface AuthService {
     // 로그인
     TokenDto login(RequestLoginDto requestLoginDto);
 
+    /** 로그아웃 */
+    void logout(TokenDto tokenDto);
+
     // 토큰 재발급
     TokenDto regenerateToken(RequestRegenerateToken requestRegenerateToken);
 }

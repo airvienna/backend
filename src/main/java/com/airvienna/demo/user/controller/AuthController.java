@@ -32,6 +32,13 @@ public class AuthController {
         return ResponseEntity.ok(tokenDto);
     }
 
+    /** 로그아웃 */
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody TokenDto tokenDto) {
+        authService.logout(tokenDto);
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/regenerationToken")
     public ResponseEntity<TokenDto> regenerationToken(@RequestBody RequestRegenerateToken requestRegenerateToken) {
         TokenDto tokenDto = authService.regenerateToken(requestRegenerateToken);
