@@ -1,6 +1,7 @@
 package com.airvienna.demo.security.service;
 
 import com.airvienna.demo.user.domain.User;
+import com.airvienna.demo.user.exception.UserNotFoundException;
 import com.airvienna.demo.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,8 +24,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
-                    log.error("사용자를 찾을 수 없습니다."); // INVALID_USER_NUM.getMessage()를 대체한 에러 메시지입니다.
-                    return new RuntimeException("사용자를 찾을 수 없습니다."); // BaseException을 RuntimeException으로 변경했습니다.
+                    throw new UserNotFoundException("User not found.");
                 });
 
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

@@ -1,5 +1,7 @@
 package com.airvienna.demo.security.jwt;
 
+import com.airvienna.demo.security.execption.InvalidTokenException;
+import com.airvienna.demo.security.execption.TokenExpiredException;
 import com.airvienna.demo.security.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -112,11 +114,9 @@ public class JwtTokenProvider {
             Jwts.parserBuilder().setSigningKey(secret).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("JWT 토큰이 만료되었습니다.");
-            throw new RuntimeException("JWT 토큰이 만료되었습니다.");
+            throw new TokenExpiredException("JWT token has expired.");
         } catch (JwtException e) {
-            log.error("잘못된 JWT 토큰입니다.");
-            throw new RuntimeException("잘못된 JWT 토큰입니다.");
+            throw new InvalidTokenException("Invalid JWT token.");
         }
     }
 }

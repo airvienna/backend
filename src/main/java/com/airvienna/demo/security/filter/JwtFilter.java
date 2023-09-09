@@ -1,11 +1,13 @@
 package com.airvienna.demo.security.filter;
 
+import com.airvienna.demo.security.execption.InvalidTokenException;
 import com.airvienna.demo.security.jwt.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import java.io.IOException;
  * Request 이전에 작동
  */
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -35,9 +38,11 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         } catch (RedisConnectionFailureException e) {
             SecurityContextHolder.clearContext();
-            throw new RuntimeException("Redis 연결 에러", e); // Redis 연결 실패 시 RuntimeException 발생
+            log.error("Error connecting to Redis", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+            return;
         } catch (Exception e) {
-            throw new RuntimeException("JWT 유효하지 않음", e); // JWT 검증 실패 시 RuntimeException 발생
+            throw new InvalidTokenException("Invalid JWT token.");
         }
 
         filterChain.doFilter(request, response);
