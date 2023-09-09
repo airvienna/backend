@@ -67,7 +67,7 @@ public class JwtTokenProvider {
 
         // redis에 저장
         redisTemplate.opsForValue().set(
-                authentication.getName(),
+                "refreshToken:" + authentication.getName(),
                 refreshToken,
                 refreshExpirationTime,
                 TimeUnit.MILLISECONDS

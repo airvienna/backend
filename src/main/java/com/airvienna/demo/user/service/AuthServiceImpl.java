@@ -96,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
 
         // Redis에서 Refresh Token 값 확인
-        String redisRefreshToken = (String) redisTemplate.opsForValue().get(authentication.getName());
+        String redisRefreshToken = (String) redisTemplate.opsForValue().get("refreshToken:" + authentication.getName());
         if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
             throw new InvalidRefreshTokenException("The refresh token is invalid.");
         }
