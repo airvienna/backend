@@ -7,7 +7,7 @@ import com.airvienna.demo.user.dto.RequestUserDto;
 
 public interface AuthService {
     // 회원가입
-    Long signUp(RequestUserDto requestUserDto);
+    TokenDto signUp(RequestUserDto requestUserDto);
 
     // 로그인
     TokenDto login(RequestLoginDto requestLoginDto);

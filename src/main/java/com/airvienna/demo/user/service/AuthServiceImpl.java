@@ -34,9 +34,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public Long signUp(RequestUserDto requestUserDto) {
+    public TokenDto signUp(RequestUserDto requestUserDto) {
+        // 유저의 정보 저장
         User user = userMapper.requestToEntity(requestUserDto);
-        return userRepository.save(user).getId();
+        userRepository.save(user).getId();
+
+        // JWT 토큰 반환
+        TokenDto tokenDto = login(new RequestLoginDto(requestUserDto.getEmail(), requestUserDto.getPassword()));
+        return tokenDto;
     }
 
     @Override
