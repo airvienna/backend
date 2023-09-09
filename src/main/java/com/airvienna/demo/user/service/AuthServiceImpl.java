@@ -1,5 +1,6 @@
 package com.airvienna.demo.user.service;
 
+import com.airvienna.demo.security.execption.InvalidTokenException;
 import com.airvienna.demo.user.exception.DuplicateEmailException;
 import com.airvienna.demo.user.exception.DuplicatePhoneException;
 import com.airvienna.demo.user.exception.InvalidCredentialsException;
@@ -15,6 +16,7 @@ import com.airvienna.demo.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,10 +24,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService {
+
+    @Value("${jwt.access-token.expiration-time}")
+    private long accessExpirationTime;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -41,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         User user = userMapper.requestToEntity(requestUserDto);
 
         // 이미 가입한 Email이면 409 CONFLCT
-        if(userRepository.existsByEmail(requestUserDto.getEmail())) {
+        if (userRepository.existsByEmail(requestUserDto.getEmail())) {
             throw new DuplicateEmailException("An account with this email already exists.");
         }
         // 이미 가입한 전화번호이면 409 CONFLCT
@@ -80,6 +87,29 @@ public class AuthServiceImpl implements AuthService {
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException("The provided email or password is incorrect.");
         }
+    }
+
+    @Override
+    @Transactional
+    public void logout(TokenDto tokenDto) {
+        // JWT를 통한 Refresh Token 유효성 검사
+        if (!jwtTokenProvider.validateToken(tokenDto.getAccessToken())) {
+            throw new InvalidTokenException("The access token is invalid.");
+        }
+
+        // Refresh Token에서 Authentication 정보 획득
+        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
+
+        // Access token을 블랙리스트에 등록
+        redisTemplate.opsForValue().set(
+                "accessTokenBlackList:" + authentication.getName(),
+                tokenDto.getAccessToken(),
+                accessExpirationTime,
+                TimeUnit.MILLISECONDS
+        );
+
+        // Refresh token을 삭제
+        redisTemplate.delete("refreshToken:" + authentication.getName());
     }
 
     @Override
