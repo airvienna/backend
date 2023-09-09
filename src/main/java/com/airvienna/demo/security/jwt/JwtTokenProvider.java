@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 @Component
 @RequiredArgsConstructor
@@ -42,12 +43,13 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().setSubject(authentication.getName());
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + accessExpirationTime);
+        SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(secret, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -103,6 +105,35 @@ public class JwtTokenProvider {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    /**
+     * secret 키를 가지고 토큰에서 정보 검색
+     * @param token
+     * @return
+     */
+    private Claims getAllClaimsFromToken(String token) {
+        SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+
+        return Jwts.parserBuilder()
+                .setSigningKey(secret)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
+    }
+
+    /**
+     * jwt 토큰에서 날짜 만료 검색
+     * @param token
+     * @return
+     */
+    public Date getExpirationDateFromToken(String token){
+        return getClaimFromToken(token, Claims::getExpiration);
     }
 
     /**
