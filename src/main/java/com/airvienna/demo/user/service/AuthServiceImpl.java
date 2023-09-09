@@ -1,5 +1,7 @@
 package com.airvienna.demo.user.service;
 
+import com.airvienna.demo.exception.InvalidCredentialsException;
+import com.airvienna.demo.exception.InvalidRefreshTokenException;
 import com.airvienna.demo.security.jwt.JwtTokenProvider;
 import com.airvienna.demo.user.Mapper.UserMapper;
 import com.airvienna.demo.user.domain.User;
@@ -41,6 +43,8 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public TokenDto login(RequestLoginDto requestLoginDto) {
         try {
+            // 사용자의 이메일과 비밀번호를 사용하여 인증을 시도
+            // 인증에 실패하면 `BadCredentialsException`을 발생
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             requestLoginDto.getEmail(),
@@ -48,6 +52,7 @@ public class AuthServiceImpl implements AuthService {
                     )
             );
 
+            // JWT token 발급
             TokenDto tokenDto = new TokenDto(
                     jwtTokenProvider.createAccessToken(authentication),
                     jwtTokenProvider.createRefreshToken(authentication)
@@ -55,9 +60,8 @@ public class AuthServiceImpl implements AuthService {
 
             return tokenDto;
 
-        }catch(BadCredentialsException e){
-            log.error("잘못된 사용자 비밀번호입니다."); // INVALID_USER_PW.getMessage()를 대체한 에러 메시지입니다.
-            throw new RuntimeException("잘못된 사용자 비밀번호입니다."); // BaseException을 RuntimeException으로 변경했습니다.
+        } catch (BadCredentialsException e) {
+            throw new InvalidCredentialsException("The provided email or password is incorrect.");
         }
     }
 
@@ -66,23 +70,21 @@ public class AuthServiceImpl implements AuthService {
     public TokenDto regenerateToken(RequestRegenerateToken requestRegenerateToken) {
         String refreshToken = requestRegenerateToken.getRefreshToken();
 
-        // 1. JWT를 통한 Refresh Token 유효성 검사
+        // JWT를 통한 Refresh Token 유효성 검사
         if (!jwtTokenProvider.validateToken(refreshToken)) {
-            log.error("잘못된 refresh token입니다.");
-            throw new RuntimeException("잘못된 refresh token입니다.");
+            throw new InvalidRefreshTokenException("The refresh token is invalid.");
         }
 
-        // 2. Refresh Token에서 Authentication 정보 획득
+        // Refresh Token에서 Authentication 정보 획득
         Authentication authentication = jwtTokenProvider.getAuthentication(refreshToken);
 
-        // 3. Redis에서 Refresh Token 값 확인
-        String redisRefreshToken = (String)redisTemplate.opsForValue().get(authentication.getName());
+        // Redis에서 Refresh Token 값 확인
+        String redisRefreshToken = (String) redisTemplate.opsForValue().get(authentication.getName());
         if (redisRefreshToken == null || !redisRefreshToken.equals(refreshToken)) {
-            log.error("Redis에 저장된 refresh token이 일치하지 않습니다.");
-            throw new RuntimeException("Redis에 저장된 refresh token이 일치하지 않습니다.");
+            throw new InvalidRefreshTokenException("The refresh token is invalid.");
         }
 
-        // 4. 새로운 Access Token 및 Refresh Token 발급
+        // 새로운 Access Token 및 Refresh Token 발급
         TokenDto tokenDto = new TokenDto(
                 jwtTokenProvider.createAccessToken(authentication),
                 jwtTokenProvider.createRefreshToken(authentication)
