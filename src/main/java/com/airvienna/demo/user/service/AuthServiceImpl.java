@@ -41,6 +41,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
 
+    /**
+     * 회원가입
+     */
     @Override
     @Transactional
     public TokenDto signUp(RequestUserDto requestUserDto) {
@@ -63,6 +66,9 @@ public class AuthServiceImpl implements AuthService {
         return tokenDto;
     }
 
+    /**
+     * 로그인
+     */
     @Override
     @Transactional
     public TokenDto login(RequestLoginDto requestLoginDto) {
@@ -89,6 +95,9 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    /**
+     * 로그아웃
+     */
     @Override
     @Transactional
     public void logout(TokenDto tokenDto) {
@@ -112,6 +121,9 @@ public class AuthServiceImpl implements AuthService {
         redisTemplate.delete("refreshToken:" + authentication.getName());
     }
 
+    /**
+     * 토큰 갱신
+     */
     @Override
     @Transactional
     public TokenDto regenerateToken(RequestRegenerateToken requestRegenerateToken) {

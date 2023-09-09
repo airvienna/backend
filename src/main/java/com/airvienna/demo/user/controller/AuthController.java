@@ -17,7 +17,9 @@ public class AuthController {
 
     private final AuthService authService;
 
-    // 회원가입
+    /**
+     * 회원가입
+     */
     @PostMapping("/signup")
     public ResponseEntity<TokenDto> signUp(@Valid @RequestBody RequestUserDto requestUserDto) {
         TokenDto tokenDto = authService.signUp(requestUserDto);
@@ -25,20 +27,27 @@ public class AuthController {
         return ResponseEntity.ok(tokenDto);
     }
 
-    // 로그인
+    /**
+     *  로그인
+     */
     @PostMapping("/login")
     public ResponseEntity<TokenDto> login(@Valid @RequestBody RequestLoginDto requestLoginDto) {
         TokenDto tokenDto = authService.login(requestLoginDto);
         return ResponseEntity.ok(tokenDto);
     }
 
-    /** 로그아웃 */
+    /**
+     * 로그아웃
+     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody TokenDto tokenDto) {
         authService.logout(tokenDto);
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 토큰 갱신
+     */
     @PostMapping("/regenerationToken")
     public ResponseEntity<TokenDto> regenerationToken(@RequestBody RequestRegenerateToken requestRegenerateToken) {
         TokenDto tokenDto = authService.regenerateToken(requestRegenerateToken);
