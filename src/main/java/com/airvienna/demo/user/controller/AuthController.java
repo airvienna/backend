@@ -19,9 +19,10 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/signup")
-    public ResponseEntity<Long> signUp(@Valid @RequestBody RequestUserDto requestUserDto) {
-        Long userId = authService.signUp(requestUserDto);
-        return ResponseEntity.ok(userId);
+    public ResponseEntity<TokenDto> signUp(@Valid @RequestBody RequestUserDto requestUserDto) {
+        TokenDto tokenDto = authService.signUp(requestUserDto);
+
+        return ResponseEntity.ok(tokenDto);
     }
 
     @PostMapping("/login")
