@@ -1,11 +1,15 @@
-package com.airvienna.demo.exception;
+package com.airvienna.demo.handler;
 
+import com.airvienna.demo.exception.DuplicateEmailException;
+import com.airvienna.demo.exception.DuplicatePhoneException;
+import com.airvienna.demo.exception.InvalidCredentialsException;
+import com.airvienna.demo.exception.InvalidRefreshTokenException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class UserExceptionHandler {
     @ExceptionHandler(InvalidRefreshTokenException.class)
     public ResponseEntity<String> handleInvalidRefreshTokenHandle(InvalidRefreshTokenException ex) {
         return new ResponseEntity<>(ex.getMessage(), ex.getHttpStatus());
